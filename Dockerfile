@@ -1,6 +1,6 @@
 FROM centos:7
 
-MAINTAINER "European Environment Agency (EEA): IDM2 A-Team" <eea-edw-a-team-alerts@googlegroups.com>
+MAINTAINER "Logan Wood" <logan@loganwood.xyz>
 
 EXPOSE 25
 
