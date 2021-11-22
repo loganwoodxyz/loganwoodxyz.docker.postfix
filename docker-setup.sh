@@ -3,15 +3,18 @@
 # configure postfix
 
 function setup_conf_and_secret {
-	postconf -e "relayhost = $MTP_HOST" \
+	postconf -e "relayhost = [$MTP_RELAY]:$MTP_PORT" \
 		"smtp_sasl_auth_enable = yes" \
 		"smtp_sasl_security_options = noanonymous" \
 		"smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd" \
 		"smtp_use_tls = yes" \
 		"smtp_tls_security_level = encrypt" \
 		"smtp_tls_note_starttls_offer = yes" \
-		"smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt"
-	sed 's/^[^#]*.-o smtp_fallback_relay/#&/' /etc/postfix/master.cf >/etc/postfix/master.cf
+		"smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt" \
+		'mynetworks = 127.0.0.0/8 172.16.0.0/12 172.17.0.0/16 10.0.0.0/8'
+
+	mv /etc/postfix/master.cf /etc/postfix/master.cf.backup
+	sed 's/^[^#]*.-o smtp_fallback_relay/#&/' /etc/postfix/master.cf.backup >/etc/postfix/master.cf
 
 	
     echo "$MTP_RELAY $MTP_USER:$MTP_PASS" > /etc/postfix/sasl_passwd
@@ -19,6 +22,9 @@ function setup_conf_and_secret {
 
     chown root:root /etc/postfix/sasl_passwd.db
     chmod 0600 /etc/postfix/sasl_passwd.db
+
+    mkdir -pv /var/spool/postfix/etc
+    printf "nameserver 8.8.8.8\nsearch .\n" > /var/spool/postfix/etc/resolv.conf
 }
 
 if [ -z "$MTP_INTERFACES" ]; then
