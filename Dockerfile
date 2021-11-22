@@ -1,4 +1,4 @@
-FROM centos:8
+FROM ubuntu:focal
 
 MAINTAINER "Logan Wood" <logan@loganwood.xyz>
 
@@ -7,8 +7,8 @@ EXPOSE 25
 VOLUME ["/var/log", "/var/spool/postfix"]
 
 
-RUN dnf install -y python3 postfix cyrus-sasl cyrus-sasl-plain mailx && \
-    dnf clean all
+RUN apt update && \
+apt install -y python3 postfix libsasl2-modules
 
 RUN python3 -m pip install chaperone
 
