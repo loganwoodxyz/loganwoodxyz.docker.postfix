@@ -47,7 +47,7 @@ if [ -n "$MTP_RELAY_DOMAINS" ]; then
   postconf -e "relay_domains = $MTP_RELAY_DOMAINS"
 fi
 
-if [ ! -z "$MTP_RELAY" -a ! -z "$MTP_PORT" -a ! -z "$MTP_USER" -a ! -z "$MTP_PASS" ]; then
+if [ -n "$MTP_RELAY" -a -n "$MTP_PORT" -a -n "$MTP_USER" -a -n "$MTP_PASS" ]; then
     setup_conf_and_secret
 else
     postconf -e 'mynetworks = 127.0.0.1/32 192.168.0.0/16 172.16.0.0/12 172.17.0.0/16 10.0.0.0/8'
